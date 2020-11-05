@@ -4,14 +4,15 @@
 #
 Name     : minimodem
 Version  : 0.24.1
-Release  : 6
+Release  : 7
 URL      : https://github.com/kamalmostafa/minimodem/archive/minimodem-0.24-1.tar.gz
 Source0  : https://github.com/kamalmostafa/minimodem/archive/minimodem-0.24-1.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-3.0
-Requires: minimodem-bin
-Requires: minimodem-doc
+Requires: minimodem-bin = %{version}-%{release}
+Requires: minimodem-license = %{version}-%{release}
+Requires: minimodem-man = %{version}-%{release}
 BuildRequires : pkgconfig(alsa)
 BuildRequires : pkgconfig(fftw3f)
 BuildRequires : pkgconfig(libpulse-simple)
@@ -28,21 +29,31 @@ NOAA SAME, and Caller-ID.
 %package bin
 Summary: bin components for the minimodem package.
 Group: Binaries
+Requires: minimodem-license = %{version}-%{release}
 
 %description bin
 bin components for the minimodem package.
 
 
-%package doc
-Summary: doc components for the minimodem package.
-Group: Documentation
+%package license
+Summary: license components for the minimodem package.
+Group: Default
 
-%description doc
-doc components for the minimodem package.
+%description license
+license components for the minimodem package.
+
+
+%package man
+Summary: man components for the minimodem package.
+Group: Default
+
+%description man
+man components for the minimodem package.
 
 
 %prep
 %setup -q -n minimodem-minimodem-0.24-1
+cd %{_builddir}/minimodem-minimodem-0.24-1
 pushd ..
 cp -a minimodem-minimodem-0.24-1 buildavx2
 popd
@@ -51,34 +62,46 @@ popd
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1517765627
-export CFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export FFLAGS="$CFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
-export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1604607135
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FCFLAGS="$FFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FFLAGS="$FFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
 %reconfigure --disable-static
 make  %{?_smp_mflags}
+unset PKG_CONFIG_PATH
 pushd ../buildavx2/
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
+export FFLAGS="$FFLAGS -m64 -march=haswell"
+export FCFLAGS="$FCFLAGS -m64 -march=haswell"
 export LDFLAGS="$LDFLAGS -m64 -march=haswell"
-%reconfigure --disable-static    --libdir=/usr/lib64/haswell --bindir=/usr/bin/haswell
+%reconfigure --disable-static
 make  %{?_smp_mflags}
 popd
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || :
+cd ../buildavx2;
+make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1517765627
+export SOURCE_DATE_EPOCH=1604607135
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/minimodem
+cp %{_builddir}/minimodem-minimodem-0.24-1/COPYING %{buildroot}/usr/share/package-licenses/minimodem/245cd12d5d5b2b1afd89530068d8f330f0073ca2
+cp %{_builddir}/minimodem-minimodem-0.24-1/debian/copyright %{buildroot}/usr/share/package-licenses/minimodem/d9774cd82a13c9ab3ebdef7250922a91bc10fc57
 pushd ../buildavx2/
-%make_install
+%make_install_avx2
 popd
 %make_install
 
@@ -90,6 +113,11 @@ popd
 /usr/bin/haswell/minimodem
 /usr/bin/minimodem
 
-%files doc
-%defattr(-,root,root,-)
-%doc /usr/share/man/man1/*
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/minimodem/245cd12d5d5b2b1afd89530068d8f330f0073ca2
+/usr/share/package-licenses/minimodem/d9774cd82a13c9ab3ebdef7250922a91bc10fc57
+
+%files man
+%defattr(0644,root,root,0755)
+/usr/share/man/man1/minimodem.1

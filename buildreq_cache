@@ -1,0 +1,5 @@
+0.24.1
+pkgconfig(alsa)
+pkgconfig(fftw3f)
+pkgconfig(libpulse-simple)
+pkgconfig(sndfile)
