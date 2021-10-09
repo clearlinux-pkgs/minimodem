@@ -4,7 +4,7 @@
 #
 Name     : minimodem
 Version  : 0.24.1
-Release  : 8
+Release  : 9
 URL      : https://github.com/kamalmostafa/minimodem/archive/minimodem-0.24-1.tar.gz
 Source0  : https://github.com/kamalmostafa/minimodem/archive/minimodem-0.24-1.tar.gz
 Summary  : No detailed summary available
@@ -73,7 +73,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1633801940
+export SOURCE_DATE_EPOCH=1633823903
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -105,7 +105,7 @@ cd ../buildavx2;
 make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1633801940
+export SOURCE_DATE_EPOCH=1633823903
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/minimodem
 cp %{_builddir}/minimodem-minimodem-0.24-1/COPYING %{buildroot}/usr/share/package-licenses/minimodem/245cd12d5d5b2b1afd89530068d8f330f0073ca2
