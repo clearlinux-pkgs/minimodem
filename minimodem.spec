@@ -4,7 +4,7 @@
 #
 Name     : minimodem
 Version  : 0.24.1
-Release  : 9
+Release  : 10
 URL      : https://github.com/kamalmostafa/minimodem/archive/minimodem-0.24-1.tar.gz
 Source0  : https://github.com/kamalmostafa/minimodem/archive/minimodem-0.24-1.tar.gz
 Summary  : No detailed summary available
