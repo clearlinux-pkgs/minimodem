@@ -1,4 +1,5 @@
 0.24.1
+perl(Getopt::Long)
 pkgconfig(alsa)
 pkgconfig(fftw3f)
 pkgconfig(libpulse-simple)
